@@ -30,15 +30,15 @@ namespace arduino {
 
             return c;
         }
-
+//////////////////////////////////////////////////////////////////////
         struct Payload
         {
 			unsigned int m_cksum = 0;
 			
 			union {
 				unsigned int m_data;
-				unsigned char m_j[4] = { 0,0,0,0 };
-				struct { unsigned char m_speed : 8, m_steering : 8, m_j3 : 8, m_j4 : 8; };
+			    char m_j[4] = { 0,0,0,0 };
+				struct { char m_speed : 8, m_steering : 8, m_j3 : 8, m_j4 : 8; };
 			};
 
 			union {
@@ -57,6 +57,11 @@ namespace arduino {
                 return this;
             }
 
+			Payload()
+			{
+				//The struct holds POD only , i can do it
+				memset(this, 0x0, sizeof(Payload));
+			}
 		private:
 			unsigned int hashify() const
 			{
@@ -64,8 +69,7 @@ namespace arduino {
 				//return   ( m_j[0] | ( m_j[1] << 8) | ( m_j[2] << 16 ) | ( m_bits << 24 ) ) ;
 			}
         };
-
-
+//////////////////////////////////////////////////////////////////////
         bool operator==( const Payload& i_left, const Payload& i_right )
         {
 			if (i_left.m_bits != i_right.m_bits)
@@ -103,12 +107,12 @@ namespace arduino {
 
             return true;
         }
-
+//////////////////////////////////////////////////////////////////////
         struct PayloadAck
         {
             char speed;
             char batteryLevel;
-        } ack;
+        } payLoadAck;
 
     }
 }
