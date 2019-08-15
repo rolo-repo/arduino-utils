@@ -41,7 +41,8 @@ namespace arduino {
                 m_lastPressedTime = millis();
                 m_stateChageTime = m_lastPressedTime;
             }
-
+			Button(const Button&) = delete;
+			//Button& operator=(const Button&)  = delete;
             int getState() const { return m_buttonState; }
             int getClicks() const { return m_numberOfClicks; }
             bool run()
@@ -50,6 +51,7 @@ namespace arduino {
             }
 
         private:
+			
             bool doRun();
             static void onLongClick();
             static void onSingleClick();

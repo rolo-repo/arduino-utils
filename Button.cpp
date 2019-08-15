@@ -10,15 +10,12 @@ namespace arduino
         //////////////////////////////////////////////////////////////////////////////////////
         void Button::onLongClick()
         {
-            LOG_MSG(F("LongClick"));
         }
         void Button::onSingleClick()
         {
-            LOG_MSG(F("SingleClick"));
         }
         void Button::onDoubleClick()
         {
-            LOG_MSG(F("DoubleClick"));
         }
         //////////////////////////////////////////////////////////////////////////////////////
         bool Button::doRun()

@@ -37,7 +37,7 @@ namespace arduino {
 			
 			union {
 				unsigned int m_data;
-			    char m_j[4] = { 0,0,0,0 };
+			    char m_j[4] = { 0 };
 				struct { char m_speed : 8, m_steering : 8, m_j3 : 8, m_j4 : 8; };
 			};
 
@@ -72,22 +72,18 @@ namespace arduino {
 //////////////////////////////////////////////////////////////////////
         bool operator==( const Payload& i_left, const Payload& i_right )
         {
-			if (i_left.m_bits != i_right.m_bits)
+			if ( i_left.m_bits != i_right.m_bits )
 			{
-				LOG_MSG("Bits " << i_left.m_bits << " " << i_right.m_bits);
 				return false;
 			}
 
-			if (i_left.m_data != i_right.m_data)
+			if ( i_left.m_data != i_right.m_data )
 			{
 				for ( char i = 0; i < sizeof(Payload::m_j); i++ )
 				{
 					if (abs(i_left.m_j[i] - i_right.m_j[i]) > 10)
 					{
-						LOG_MSG("Data " << i_left.m_j[i] << " " << i_right.m_j[i]);
-
 						return false;
-			
 					}
 				}
 			}

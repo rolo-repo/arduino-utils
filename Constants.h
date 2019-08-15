@@ -33,4 +33,14 @@ namespace arduino {
   }
 }
 
+#define NON_DERIVABLE_BASE(ACLASS)\
+    class ACLASS;\
+    class DerivedBlocker##ACLASS\
+    {\
+    private:\
+    friend class ACLASS;\
+    DerivedBlocker##ACLASS() {}\
+};
+#define NON_DERIVABLE(ACLASS) virtual public DerivedBlocker##ACLASS
+
 #endif
