@@ -54,8 +54,8 @@ namespace arduino {
 				return abs(m_val);
 			}
 
-			InteruptEncoder(const InteruptEncoder&) = delete
-			InteruptEncoder& operator=(const InteruptEncoder&) = delete
+			InteruptEncoder(const InteruptEncoder&) = delete;
+			InteruptEncoder& operator=(const InteruptEncoder&) = delete;
 		private:
 
 			PIN m_p1;

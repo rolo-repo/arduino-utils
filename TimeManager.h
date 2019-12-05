@@ -7,7 +7,9 @@
 #include "WProgram.h"
 #endif
 
-#if defined ARDUINO_ARCH_ESP8266
+#include "Pair.h"
+
+#if defined ARDUINO_ARCH_ESP8266 
 #include <NtpClientLib.h>
 
 #ifdef min
@@ -65,13 +67,15 @@ namespace arduino {
 }
 
 extern  arduino::utils::TimeManager  TIME;
+#endif //ARDUINO_ARCH_ESP8266
 
-#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 
 #include <functional>
 typedef std::function<void(long&)> Handler;
 #else
 typedef    void(*Handler)(long&);
 #endif
+
 
 
 namespace arduino
@@ -138,7 +142,7 @@ namespace arduino
  
         private:
             static const short m_max = 10;
-            std::pair<long, Handler> m_tasks[m_max];
+            Pair< long, Handler > m_tasks[m_max];
 
             short  m_tasksCount;
             String m_name;
@@ -146,5 +150,5 @@ namespace arduino
 
     }
 }
-#endif
-#endif
+
+#endif //_TimeManager_h

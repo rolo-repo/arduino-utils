@@ -6,7 +6,7 @@ namespace arduino {
 
         static const short RF_TIMEOUT_MS = 1000;
 
-        unsigned int hash32(unsigned int i_key32, int i_initValue = 0)
+        unsigned int hash32(unsigned long i_key32, long i_initValue = 0)
         {
             #define ROT32(x,k) (((x)<<(k)) | ((x)>>(32-(k))))
 
@@ -21,9 +21,9 @@ namespace arduino {
                 c ^= b; c -= ROT32 (b, 24); \
             }
 
-            unsigned int a, b, c;
+            unsigned long a, b, c;
 
-            a = b = c = 0xdeadbeef + (static_cast<int>(1 /* because of Fixed1 */) << 2) + i_initValue;
+            a = b = c = 0xdeadbeef + (static_cast<long>(1 /* because of Fixed1 */) << 2) + i_initValue;
             a += i_key32;
 
             FINAL32(a, b, c);
@@ -33,12 +33,12 @@ namespace arduino {
 //////////////////////////////////////////////////////////////////////
         struct Payload
         {
-			unsigned int m_cksum = 0;
+			unsigned long m_cksum = 0;
 			
 			union {
-				unsigned int m_data;
-			    char m_j[4] = { 0 };
-				struct { char m_speed : 8, m_steering : 8, m_j3 : 8, m_j4 : 8; };
+				struct { char m_speed, m_steering, m_j3, m_j4; };
+				unsigned long m_data;
+			    char m_j[4];
 			};
 
 			union {
@@ -87,19 +87,6 @@ namespace arduino {
 					}
 				}
 			}
-
-			/*
-			if (abs(i_left.m_speed - i_right.m_speed) > 5)
-            {
-                return false;
-            }
-
-            if (abs(i_left.m_steering - i_right.m_steering) > 5)
-            {
-                return false;
-            }*/
-
-         
 
             return true;
         }

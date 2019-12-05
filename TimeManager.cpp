@@ -1,16 +1,18 @@
 #include "TimeManager.h"
-#if defined ARDUINO_ARCH_ESP8266
+
 
 #include <TimeLib.h>
 
-#define ENABLE_LOGGER
 #include <SerialOutput.h>
 #include <Constants.h>
-arduino::utils::TimeManager  TIME;
-#define NTP_SYNC_PERIOD_SEC 60 * 60 
+
 
 namespace arduino {
     namespace utils {
+
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
+#define NTP_SYNC_PERIOD_SEC 60 * 60 
+		TimeManager  TIME;
 
         long TimeManager::getEpochDate() const
         {
@@ -111,24 +113,29 @@ namespace arduino {
         {
             return (m_seconds > 0x1000000L);
         }
-
-   /////////////////////////////////////////////////////////////////
-
+#endif //ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
+ /////////////////////////////////////////////////////////////////////////////
         const short Timer::m_max;
 
         void Timer::run()
         {
             for ( int i = 0; i < m_tasksCount; i++ )
             {
-                if (TIME.getEpochTime() >= m_tasks[i].first)
+				long cTime =
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 
+					TIME.getEpochTime();
+#else
+					now();
+#endif
+                if (cTime >= m_tasks[i].first)
                 {
                     LOG_MSG( m_name << " Executing task [" << i + 1 <<"] scheduled to " << (TimeValue) m_tasks[i].first);
-                    m_tasks[i].first = TIME.getEpochTime();
+                    m_tasks[i].first = cTime;
                     (m_tasks[i].second)(m_tasks[i].first);
                  
-                    if( m_tasks[i].first <= TIME.getEpochTime() )
+                    if( m_tasks[i].first <= cTime ) //if time was not changed in function
                     {
-                        LOG_MSG( m_name << " Task [" << i + 1 << "] "  << m_tasks[i].first << "] is not resceduled deleting it");
+                        LOG_MSG( m_name << " Task [" << i + 1 << "] ["  << m_tasks[i].first << "] is not rescheduled deleting it");
 
                         //delete the task ,if only 1 only decrease the counter to 0
                         m_tasksCount--;
@@ -147,42 +154,32 @@ namespace arduino {
 
         bool Timer::addTask( long i_time, Handler i_handler )
         {
-            LOG_MSG( m_name << " adding task sceduled to " << (TimeValue) i_time );
+            LOG_MSG( m_name << " adding task scheduled to " << (TimeValue) i_time );
             if ( m_tasksCount < m_max )
             {
-                m_tasks[m_tasksCount] = std::make_pair(i_time, i_handler);
+                m_tasks[m_tasksCount] = make_Pair(i_time, i_handler);
                 m_tasksCount++;
                 LOG_MSG( m_name << " adding task - left places " << m_max - m_tasksCount);
 
                 return true;
             }
-           /* else
-            {
-                LOG_MSG( m_name << " adding task , trying to free space");
-
-                for (int i = 1; i < m_max; i++)
-                {
-                    m_tasks[i - 1] = m_tasks[i];
-                }
-                m_tasks[m_max - 1] = std::make_pair(i_time, i_handler);
-
-               
-            }     */
-
+  
             return false;
            
         }
     
         bool Timer::addRecuringTask( long i_startTime , long i_interval , Handler i_function )
         {
-            return addTask(i_startTime, [=](long &o_time)
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 
+            return addTask( i_startTime, [=](long &o_time)
             {
                 i_function(o_time);
                 o_time += i_interval;
             });
+#else
+			return addTask( i_startTime, i_function);
+#endif
         }
-
 
     }
 }
-#endif
