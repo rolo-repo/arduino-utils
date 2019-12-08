@@ -17,6 +17,8 @@ Editor:	http://www.visualmicro.com
 #include "TimeLib.h"
 
 #ifdef ENABLE_LOGGER
+#define LOG_MSG_BEGIN(BIT_RATE)  Serial.begin(BIT_RATE)
+
 #define LOG_MSG(...)\
 {\
   arduino::utils::LogItem __item__;\
@@ -24,12 +26,7 @@ Editor:	http://www.visualmicro.com
 }
 #else
 #define LOG_MSG(...)
-#endif
-
-#ifdef ENABLE_LOGGER
-#define LOG_MSG_BEGIN(BIT_RATE)  Serial.begin(BIT_RATE);
-#else
-#define LOG_MSG_BEGIN
+#define LOG_MSG_BEGIN(...)
 #endif
 
 

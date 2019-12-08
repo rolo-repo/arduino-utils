@@ -1,18 +1,19 @@
 #include "TimeManager.h"
 
-
 #include <TimeLib.h>
-
 #include <SerialOutput.h>
 #include <Constants.h>
 
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 || defined ESP8266
+arduino::utils::TimeManager  TIME;
+#endif
 
 namespace arduino {
     namespace utils {
 
-#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 || defined ESP8266
 #define NTP_SYNC_PERIOD_SEC 60 * 60 
-		TimeManager  TIME;
+		
 
         long TimeManager::getEpochDate() const
         {
@@ -170,7 +171,7 @@ namespace arduino {
     
         bool Timer::addRecuringTask( long i_startTime , long i_interval , Handler i_function )
         {
-#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 || defined ESP8266
             return addTask( i_startTime, [=](long &o_time)
             {
                 i_function(o_time);

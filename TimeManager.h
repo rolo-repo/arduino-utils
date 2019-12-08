@@ -7,9 +7,7 @@
 #include "WProgram.h"
 #endif
 
-#include "Pair.h"
-
-#if defined ARDUINO_ARCH_ESP8266 
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 || defined ESP8266
 #include <NtpClientLib.h>
 
 #ifdef min
@@ -76,7 +74,7 @@ typedef std::function<void(long&)> Handler;
 typedef    void(*Handler)(long&);
 #endif
 
-
+#include "Pair.h"
 
 namespace arduino
 {
