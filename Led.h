@@ -41,13 +41,13 @@ public:
 		digitalWrite(m_pin, LOW);
 	}
 
-	void turn_on(Brightness i_brtness = Brightness::_50 );
+	void turn_on(Brightness i_brtness = Brightness::_100 );
 	void turn_off()
 	{
 		digitalWrite(m_pin, LOW );
 		m_status = LedStS::OFF;
 	}
-	void blynk(Brightness i_brtness = Brightness::_50 )
+	void blynk(Brightness i_brtness = Brightness::_100 )
 	{
 		(m_status == LedStS::OFF) ? turn_on(i_brtness) : turn_off();
 	}

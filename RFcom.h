@@ -93,8 +93,8 @@ namespace arduino {
 //////////////////////////////////////////////////////////////////////
         struct PayloadAck
         {
-            char speed;
-            char batteryLevel;
+            unsigned char speed;
+            unsigned char batteryLevel;
         } payLoadAck;
 
     }
