@@ -29,7 +29,7 @@ namespace arduino {
 
 				if (0 != i_other.m_pData)
 				{
-					m_pData = new char[i_other.m_size];
+					m_pData = new T[i_other.m_size];
 					memcpy(m_pData, i_other.m_pData, i_other.m_size);
 					m_size = i_other.m_size;
 				}

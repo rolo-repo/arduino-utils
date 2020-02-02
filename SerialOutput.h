@@ -18,12 +18,19 @@ Editor:	http://www.visualmicro.com
 
 #ifdef ENABLE_LOGGER
 #define LOG_MSG_BEGIN(BIT_RATE)  Serial.begin(BIT_RATE)
-
+#ifdef __ESP8266_ESP8266__
+#define LOG_MSG(...)\
+{\
+  arduino::utils::LogItem __item__;\
+  arduino::utils::SerialOutput::write( __item__<< millis() << "> " << __FUNCTION__<< ":["<<__LINE__<<"] "<<__VA_ARGS__ );\
+}
+#else
 #define LOG_MSG(...)\
 {\
   arduino::utils::LogItem __item__;\
   arduino::utils::SerialOutput::write( __item__<< millis() << F("> ") << __FUNCTION__<< F(":[")<<__LINE__<<F("] ")<<__VA_ARGS__ );\
 }
+#endif
 #else
 #define LOG_MSG(...)
 #define LOG_MSG_BEGIN(...)
