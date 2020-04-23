@@ -15,7 +15,7 @@ typedef unsigned int PIN;
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 || defined ESP8266
 #define RESET() ESP.restart();
 #else
-void(*RESET) (void) = 0;
+//void(*RESET) (void) = 0;
 #endif
 
 namespace arduino {
