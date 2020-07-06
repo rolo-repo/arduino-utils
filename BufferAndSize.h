@@ -65,12 +65,17 @@ namespace arduino {
 				}
 			}
 			
-			T operator[]( S i_index )
+			T operator[]( S i_index ) const
 			{
 				if (i_index <= m_size)
 					return *(m_pData + i_index);
 				else
 					return T(0);
+			}
+
+			T* operator*()
+			{
+				return m_pData;
 			}
 
 			////////////////////////////

@@ -28,8 +28,6 @@ namespace arduino
                 if (m_switchState & B_LOW)
                 {
                     m_switchState = (B_HIGH | B_SWITCH_ON);
-                    digitalWrite(LED_BUILTIN, LED_ON);
-
                     (*m_on_handler)();
                 }
                 else
@@ -54,8 +52,6 @@ namespace arduino
                 if (m_switchState & B_HIGH)
                 {
                     m_switchState = B_LOW | B_SWITCH_OFF;
-                    digitalWrite(LED_BUILTIN, LED_OFF);
-
                     (*m_off_handler)();
                 }
                 else

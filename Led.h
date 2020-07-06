@@ -34,17 +34,16 @@ public:
 	
 	 enum class Brightness { _20, _50, _100 };
 	
-	Led( PIN i_ledPin = LED_BUILTIN ) :m_pin(i_ledPin) 
+	Led( PIN i_ledPin = LED_BUILTIN , bool i_negative = false ) :m_pin(i_ledPin)  , m_negative (i_negative)
 	{ 
-		pinMode(m_pin, OUTPUT);
-		m_status = LedStS::OFF;
-		digitalWrite(m_pin, LOW);
+		pinMode( m_pin, OUTPUT );
+		turn_off();
 	}
 
 	void turn_on(Brightness i_brtness = Brightness::_100 );
 	void turn_off()
 	{
-		digitalWrite(m_pin, LOW );
+		( m_negative ) ? digitalWrite(m_pin, HIGH) : digitalWrite(m_pin, LOW);
 		m_status = LedStS::OFF;
 	}
 	void blynk(Brightness i_brtness = Brightness::_100 )
@@ -60,6 +59,37 @@ protected:
 	PIN m_pin;
 
 	LedStS m_status;
+	bool   m_negative;
+};
+
+class WimosBuildInLed : public Led
+{
+public:
+	WimosBuildInLed(): Led(LED_BUILTIN){}
+
+	void turn_on( Brightness i_brtness = Brightness::_100 )
+	{
+		switch (i_brtness)
+		{
+		case Brightness::_20:
+			analogWrite(m_pin, (int)map( 20 , 0, 100, 255, 0 ));
+			break;
+		case Brightness::_50:
+			analogWrite(m_pin, (int)map( 50, 0, 100, 255, 0 ));
+			break;
+		case Brightness::_100:
+			digitalWrite(m_pin, LOW);
+			break;
+		}
+
+		m_status = LedStS::ON;
+	}
+
+	void turn_off()
+	{
+		digitalWrite(m_pin, HIGH);
+		m_status = LedStS::OFF;
+	}
 };
 
 class RGBLed
@@ -67,14 +97,19 @@ class RGBLed
 public:
 	enum class  LedType: char { Red = 0b001 ,Green = 0b010 , Blue = 0b100 };
 
-	RGBLed(PIN i_green, PIN i_blue, PIN i_red) : m_green(i_green), m_blue(i_blue), m_red(i_red) {
+	RGBLed(PIN i_green, PIN i_blue, PIN i_red , Led::Brightness i_brtns = Led::Brightness::_100 , bool i_negative = false ) :
+		m_green(i_green, i_negative ), 
+		m_blue(i_blue, i_negative ), 
+		m_red(i_red, i_negative ) ,
+		m_brightness(i_brtns)
+	{
 		m_lastUsedLed = (char)LedType::Green;
 	}
 
-	void turn_on( LedType i_type )
+	void turn_on( LedType i_type  )
 	{
 		turn_off();
-		getLed(i_type).turn_on(Led::Brightness::_100);
+		getLed(i_type).turn_on(m_brightness);
 	}
 
 	void turn_off ()
@@ -87,6 +122,14 @@ public:
 	void blynk ()
 	{
 		turn_on( (LedType) ( ( m_lastUsedLed == static_cast<char>(LedType::Blue) ) ? static_cast<char>(LedType::Red) : m_lastUsedLed << 1 ) ) ;
+	}
+
+	void blynk( LedType i_type )
+	{		
+		if ( m_lastUsedLed != static_cast<char>(i_type) ) 
+			turn_off();
+
+		getLed(i_type).blynk();
 	}
 
 	void rapid_blynk(const unsigned long& i_time_ms);
@@ -116,24 +159,43 @@ protected:
 	Led m_blue;
 	Led m_red;
 	
+	Led::Brightness m_brightness;
 	char m_lastUsedLed;
 };
 
 void Led::turn_on( Brightness i_brtness )
 {
-	switch (i_brtness)
+	if ( ! m_negative )
 	{
-	case Brightness::_20:
-		analogWrite( m_pin, (int ) map ( 20 , 0, 100 , 0 , 255 ) );
-		break;
-	case Brightness::_50:
-		analogWrite(m_pin, ( int ) map( 50, 0, 100, 0, 255 ));
-		break;
-	case Brightness::_100:
-		digitalWrite(m_pin, HIGH );
-		break;
+		switch (i_brtness)
+		{
+			case Brightness::_20:
+				analogWrite( m_pin, (int)map(20, 0, 100, 0, 255) );
+				break;
+			case Brightness::_50:
+				analogWrite( m_pin, (int)map(50, 0, 100, 0, 255) );
+				break;
+			case Brightness::_100:
+				digitalWrite( m_pin, HIGH );
+				break;
+		}
 	}
-
+	else
+	{
+		switch (i_brtness)
+		{
+			case Brightness::_20:
+				analogWrite( m_pin, (int)map(20, 0, 100, 255, 0) );
+				break;
+			case Brightness::_50:
+				analogWrite( m_pin, (int)map(50, 0, 100, 255, 0) );
+				break;
+			case Brightness::_100:
+				digitalWrite( m_pin, LOW );
+				break;
+			}
+	}
+	
 	m_status = LedStS::ON;
 }
 

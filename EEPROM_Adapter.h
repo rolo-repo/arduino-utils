@@ -13,6 +13,8 @@
 
 #ifndef E2SIZE
 
+#define E2SIZE 512 //default
+
 #ifdef ARDUINO_ESP8266_WEMOS_D1MINI
 #define E2SIZE 4096
 #endif
@@ -33,7 +35,7 @@ namespace arduino {
 		public:
 
 			static void begin( size_t size = E2SIZE) { 
-				#ifdef ARDUINO_ESP8266_WEMOS_D1MINI
+				#if defined ARDUINO_ARCH_ESP8266  || defined  ARDUINO_ESP8266_WEMOS_D1MINI
 					EEPROM.begin(E2SIZE);
 				#endif
 				

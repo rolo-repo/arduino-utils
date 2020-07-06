@@ -18,7 +18,7 @@ Editor:	http://www.visualmicro.com
 
 #ifdef ENABLE_LOGGER
 #define LOG_MSG_BEGIN(BIT_RATE)  Serial.begin(BIT_RATE)
-#ifdef __ESP8266_ESP8266__
+#if defined  __ESP8266_ESP8266__ || defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_wifi_kit_8 || defined ARDUINO_ESP8266_WEMOS_D1MINI 
 #define LOG_MSG(...)\
 {\
   arduino::utils::LogItem __item__;\
@@ -55,7 +55,9 @@ namespace arduino
             friend class SerialOutput;
 
         public :
+#ifndef  __ESP8266_ESP8266__
             LogItem& operator<<(const __FlashStringHelper *);
+#endif
             LogItem& operator<<(bool i_in);
             LogItem& operator<<(short i_in);
             LogItem& operator<<(int i_in);

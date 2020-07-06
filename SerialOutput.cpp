@@ -3,10 +3,13 @@
 
 namespace arduino {
     namespace utils{
+
+#ifndef  __ESP8266_ESP8266__
         LogItem& LogItem::operator<<( const __FlashStringHelper *i_in )
         {
             return *this << (const String) i_in;
         }
+#endif
         LogItem& LogItem::operator<<(bool i_in)
         {
             this->m_buffer += (i_in ? "true" : "false");
