@@ -1,6 +1,6 @@
 #ifndef RFcom_h__
 #define RFcom_h__
-#include "SerialOutput.h"
+
 namespace arduino {
     namespace utils {
 

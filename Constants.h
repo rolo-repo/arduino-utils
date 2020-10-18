@@ -36,7 +36,13 @@ namespace arduino {
 
         }
       };
-  }
+
+	  template<typename ...Args>
+	  constexpr std::size_t va_count(Args&&...) { return sizeof...(Args); }
+    
+	
+	 template <typename T, uint32 N> char( &size_of_array_helper(T(&)[N]) )[N];
+	}
 }
 
 #define NON_DERIVABLE_BASE(ACLASS)\
@@ -48,5 +54,11 @@ namespace arduino {
     DerivedBlocker##ACLASS() {}\
 };
 #define NON_DERIVABLE(ACLASS) virtual public DerivedBlocker##ACLASS
+
+#define VA_LIST(...) arduino::utils::va_count(__VA_ARGS__),__VA_ARGS__
+
+//#define SIZE_OF_ARR(x) (sizeof(x) / sizeof((x)[0])) //this is not type safe
+
+#define SIZE_OF_ARR(x) (sizeof(arduino::utils::size_of_array_helper(x)))
 
 #endif

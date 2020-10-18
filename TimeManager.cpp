@@ -56,6 +56,15 @@ namespace arduino {
             return m_buffer;
         }
 
+		const char* TimeManager::getDateStrYYYY_MM_DD( unsigned long i_seconds )  const
+		{
+			unsigned long seconds = (i_seconds) ? i_seconds : m_seconds;
+
+			memset(m_buffer, 0x0, sizeof(m_buffer));
+			snprintf(m_buffer, sizeof(m_buffer), "%04d-%02d-%02d", ::year(seconds), ::month(seconds),::day(seconds));
+			return m_buffer;
+		}
+
         bool TimeManager::begin(short i_GMT_OffsetHours, short i_GMT_OffsetMinutes)
         {
             if (!m_ok)

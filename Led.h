@@ -72,10 +72,10 @@ public:
 		switch (i_brtness)
 		{
 		case Brightness::_20:
-			analogWrite(m_pin, (int)map( 20 , 0, 100, 255, 0 ));
+			analogWrite(m_pin, (int)::map( 20 , 0, 100, 255, 0 ));
 			break;
 		case Brightness::_50:
-			analogWrite(m_pin, (int)map( 50, 0, 100, 255, 0 ));
+			analogWrite(m_pin, (int)::map( 50, 0, 100, 255, 0 ));
 			break;
 		case Brightness::_100:
 			digitalWrite(m_pin, LOW);
@@ -170,10 +170,10 @@ void Led::turn_on( Brightness i_brtness )
 		switch (i_brtness)
 		{
 			case Brightness::_20:
-				analogWrite( m_pin, (int)map(20, 0, 100, 0, 255) );
+				analogWrite( m_pin, (int)::map(20, 0, 100, 0, 255) );
 				break;
 			case Brightness::_50:
-				analogWrite( m_pin, (int)map(50, 0, 100, 0, 255) );
+				analogWrite( m_pin, (int)::map(50, 0, 100, 0, 255) );
 				break;
 			case Brightness::_100:
 				digitalWrite( m_pin, HIGH );
@@ -185,10 +185,10 @@ void Led::turn_on( Brightness i_brtness )
 		switch (i_brtness)
 		{
 			case Brightness::_20:
-				analogWrite( m_pin, (int)map(20, 0, 100, 255, 0) );
+				analogWrite( m_pin, (int)::map(20, 0, 100, 255, 0) );
 				break;
 			case Brightness::_50:
-				analogWrite( m_pin, (int)map(50, 0, 100, 255, 0) );
+				analogWrite( m_pin, (int)::map(50, 0, 100, 255, 0) );
 				break;
 			case Brightness::_100:
 				digitalWrite( m_pin, LOW );

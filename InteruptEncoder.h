@@ -29,8 +29,13 @@ namespace arduino {
 			{
 				//detachInterrupt(digitalPinToInterrupt(m_p1));
 			}
-
-			void run() volatile
+			
+			void
+#ifndef ARDUINO_AVR_NANO
+			 ICACHE_RAM_ATTR
+#else
+			run() volatile
+#endif
 			{
 				static char rot_enc_table[] = { 0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0 };
 

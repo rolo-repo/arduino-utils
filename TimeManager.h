@@ -42,6 +42,8 @@ namespace arduino {
 
             const char* getDateStr( unsigned long i_seconds = 0 )  const;
 
+			const char* getDateStrYYYY_MM_DD(unsigned long i_seconds = 0)  const;
+
             bool synced() const;
 
             short hour() const

@@ -21,21 +21,23 @@
 #include "Constants.h"
 #include "SerialOutput.h"
 
+#define __F__ FPSTR(__PRETTY_FUNCTION__)
+
 #if defined ENABLE_LOGGER
 #undef  LOG_MSG
 #define LOG_MSG(...)\
 {\
   arduino::utils::LogItem __item__;\
-  arduino::utils::SerialOutput::write( __item__<< millis() <<"> " << __FUNCTION__<<":["<<__LINE__<<"] " << __VA_ARGS__ );\
+  arduino::utils::SerialOutput::write( __item__<< millis() <<"> " << __F__ <<":["<<__LINE__<<"] " << __VA_ARGS__ );\
   __item__ = arduino::utils::LogItem();\
-  arduino::utils::MulticastOutput::write( __item__ <<  arduino::utils::Constants::ID() <<  " " << __FUNCTION__ << ":[" <<__LINE__<< "] " << __VA_ARGS__ );\
+  arduino::utils::MulticastOutput::write( __item__ <<  arduino::utils::Constants::ID() <<  " " << __F__  << ":[" <<__LINE__<< "] " << __VA_ARGS__ );\
 }
 #else
 #undef  LOG_MSG
 #define LOG_MSG(...)\
 {\
   arduino::utils::LogItem __item__; \
-  arduino::utils::MulticastOutput::write( __item__ << arduino::utils::Constants::ID() << " " << __FUNCTION__ << ":[" << __LINE__ << "] " << __VA_ARGS__); \
+  arduino::utils::MulticastOutput::write( __item__ << arduino::utils::Constants::ID() << " " << __F__  << ":[" << __LINE__ << "] " << __VA_ARGS__); \
 }
 #endif
 
