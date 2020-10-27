@@ -9,8 +9,7 @@
 
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
-#include "ESP8266WebServer.h"
-#include "ArduinoOTA.h"
+#include <ESP8266WebServer.h>
 #include <ESP8266SSDP.h> 
 
 #include "Constants.h"
@@ -18,14 +17,17 @@
 #include "MulticastOutput.h"
 #include "TimeManager.h"
 
-const char __ota_success_html[] PROGMEM = R"rawliteral(
+#include "ArduinoOTA.h"
+
+namespace arduino {
+	namespace utils {
+
+		const char __ota_success_html[] PROGMEM = R"rawliteral(
 <br>
 <h1 style="text-align:center;">Ready for update : ${buildId} date ${date}</h1>
 <br>
 )rawliteral";
 
-namespace arduino {
-	namespace utils {
 		ESP8266WebServer  oTAWebServer(8080);
 		arduino::utils::Timer oTAtimer("TimeOutTimer");
 		volatile bool __updateSketch__ = false;
