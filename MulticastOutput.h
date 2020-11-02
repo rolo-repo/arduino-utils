@@ -14,12 +14,19 @@
 	#include "WProgram.h"
 #endif
 
-#if defined ARDUINO_ARCH_ESP8266
-#include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 
 #include "Constants.h"
 #include "SerialOutput.h"
+
+#if defined ARDUINO_ARCH_ESP8266 
+#include "ESP8266WiFi.h"
+#elif defined ARDUINO_ARCH_ESP32
+#include "WiFi.h"
+#endif
+
+
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 
 #define __F__ FPSTR(__PRETTY_FUNCTION__)
 
@@ -60,16 +67,26 @@ namespace arduino
         public:
             bool sendMetric( const arduino::utils::LogItem& i_data )
             {
-                if ( WiFi.status () == WL_CONNECTED )
-                {
-                    if (!m_client.beginPacketMulticast( m_multicastIP, m_port, WiFi.localIP()) )
+				if (WiFi.status() == WL_CONNECTED)
+				{
+
+					if (
+#ifdef ARDUINO_ARCH_ESP32
+						!m_client.beginPacket(m_multicastIP, m_port)
+#else // ARDUINO_ARCH_ESP8266
+                        !m_client.beginPacketMulticast(m_multicastIP, m_port, WiFi.localIP())
+#endif
+						)
                         return false;
 
-                    short size = strlen( i_data.c_str() );
-                    std::unique_ptr<char[]> buffer( new char[ ( size + sizeof(size) ) ] );
-                    
+					uint16_t size = strlen( i_data.c_str() );
+#ifdef ARDUINO_ARCH_ESP32
+                    std::unique_ptr<uint8_t[]> buffer( new uint8_t[ ( size + sizeof(size) ) ] );
+#else // ARDUINO_ARCH_ESP8266
+					std::unique_ptr<char[]> buffer(new char[(size + sizeof(size))]);		
+#endif
                   //  char * buffer = new char[(size + sizeof(size))];
-                    *(reinterpret_cast<short*> ( buffer.get() )) = size;
+					*(reinterpret_cast<uint16_t*> (buffer.get())) = size;
                     memcpy( buffer.get() + sizeof(size), i_data.c_str(), size);
 
                     if (!m_client.write(buffer.get(), size + sizeof(size)))
@@ -90,7 +107,7 @@ namespace arduino
 }
 
 #else
-#warning "Incorrect platform. Only ESP8266 MCUs are valid."
+#warning "Incorrect platform. Only ESP MCUs are valid."
 #include "SerialOutput.h"
 #endif // NETWORK_TYPE
 

@@ -14,6 +14,16 @@ namespace arduino {
 		struct  BufferAndSize
 		{
 			BufferAndSize() :m_pData(0), m_size(0) , m_owner(false) {}
+			BufferAndSize(BufferAndSize&& i_other)
+			{
+				m_pData = i_other.m_pData;
+				m_size = i_other.m_size;
+				m_owner = i_other.m_owner;
+
+				i_other.m_pData = 0;
+				i_other.m_size = 0;
+				i_other.m_owner = false;
+			}
 			BufferAndSize(T *i_pData, S i_size , bool i_owner = false) :m_pData(i_pData), m_size(i_size) , m_owner (i_owner){}
 			BufferAndSize& operator= (const BufferAndSize& i_other)
 			{

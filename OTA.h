@@ -7,17 +7,26 @@
 #include "WProgram.h"
 #endif
 
+#ifdef ARDUINO_ARCH_ESP8266
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266SSDP.h> 
+#endif
+
+#ifdef ARDUINO_ARCH_ESP32
+#include <WiFi.h>
+#include <ESPmDNS.h>
+#include <WiFiUdp.h>
+#include <WebServer.h>
+#endif
+
+#include "ArduinoOTA.h"
 
 #include "Constants.h"
 #include "PlaceHolder.h"
 #include "MulticastOutput.h"
 #include "TimeManager.h"
-
-#include "ArduinoOTA.h"
 
 namespace arduino {
 	namespace utils {
@@ -28,7 +37,13 @@ namespace arduino {
 <br>
 )rawliteral";
 
-		ESP8266WebServer  oTAWebServer(8080);
+#ifdef ARDUINO_ARCH_ESP8266
+		ESP8266WebServer
+#else
+		WebServer
+#endif 
+		oTAWebServer(8080);
+
 		arduino::utils::Timer oTAtimer("TimeOutTimer");
 		volatile bool __updateSketch__ = false;
 
@@ -75,7 +90,9 @@ namespace arduino {
 			//ArduinoOTA.setHostname("myesp8266");
 			// No authentication by default
 			//ArduinoOTA.setPassword((const char *)"xxxxx");
-
+			
+			ArduinoOTA.setPort(8000); //need to defiend in board.txt
+			
 			ArduinoOTA.begin();
 			oTAWebServer.begin();
 

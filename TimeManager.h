@@ -8,7 +8,7 @@
 #endif
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 || defined ESP8266
-#include <NtpClientLib.h>
+#include "NtpClientLib.h"
 
 #ifdef min
 #undef min

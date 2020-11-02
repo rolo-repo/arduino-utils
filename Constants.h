@@ -11,6 +11,12 @@
 #define LED_OFF ~LOW
 
 typedef unsigned int PIN;
+typedef uint32_t uint32;
+
+#ifndef  LED_BUILTIN
+#define LED_BUILTIN 4
+#endif // ! LED_BUILTIN
+
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32 || defined ESP8266
 #define RESET() ESP.restart();
@@ -32,6 +38,10 @@ namespace arduino {
             return String(APP_ID);
 #elif defined ARDUINO_ARCH_ESP8266
             return String( ESP.getChipId());
+#elif defined ARDUINO_ARCH_ESP32
+			return String((unsigned long) ESP.getEfuseMac());
+#else
+			return "NO_ID";
 #endif
 
         }
