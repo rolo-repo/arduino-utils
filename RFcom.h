@@ -4,9 +4,9 @@
 namespace arduino {
     namespace utils {
 
-        static const short RF_TIMEOUT_MS = 1000;
+        static const uint16_t RF_TIMEOUT_MS = 1000;
 
-        unsigned int hash32(unsigned long i_key32, long i_initValue = 0)
+		uint16_t hash32( uint32_t i_key32, int32_t i_initValue = 0 )
         {
             #define ROT32(x,k) (((x)<<(k)) | ((x)>>(32-(k))))
 
@@ -21,9 +21,9 @@ namespace arduino {
                 c ^= b; c -= ROT32 (b, 24); \
             }
 
-            unsigned long a, b, c;
+			uint32_t a, b, c;
 
-            a = b = c = 0xdeadbeef + (static_cast<long>(1 /* because of Fixed1 */) << 2) + i_initValue;
+            a = b = c = 0xdeadbeef + ( static_cast<int32_t>( 1 /* because of Fixed1 */) << 2 ) + i_initValue;
             a += i_key32;
 
             FINAL32(a, b, c);
@@ -33,17 +33,17 @@ namespace arduino {
 //////////////////////////////////////////////////////////////////////
         struct Payload
         {
-			unsigned long m_cksum = 0;
+			uint32_t m_cksum = 0;
 			
 			union {
-				struct { char m_speed, m_steering, m_j3, m_j4; };
-				unsigned long m_data;
-			    char m_j[4];
+				struct { int8_t m_speed, m_steering, m_j3, m_j4; };
+				uint32_t m_data;
+			    int8_t m_j[4];
 			};
 
 			union {
-				unsigned char m_bits = 0;//8 bits
-				struct { unsigned char m_b1 : 1, m_b2 : 1, m_b3 : 1, m_b4 : 1; };
+				uint8_t m_bits = 0;//8 bits
+				struct { uint8_t m_b1 : 1, m_b2 : 1, m_b3 : 1, m_b4 : 1; };
 			};
 
             bool isValid() const
@@ -63,7 +63,7 @@ namespace arduino {
 				memset(this, 0x0, sizeof(Payload));
 			}
 		private:
-			unsigned int hashify() const
+			uint16_t hashify() const
 			{
 				return ( ( m_data & 0x00ffffff ) | m_bits << 24 );
 				//return   ( m_j[0] | ( m_j[1] << 8) | ( m_j[2] << 16 ) | ( m_bits << 24 ) ) ;
@@ -93,8 +93,8 @@ namespace arduino {
 //////////////////////////////////////////////////////////////////////
         struct PayloadAck
         {
-            unsigned char speed;
-            unsigned char batteryLevel;
+            uint8_t speed;
+			uint8_t batteryLevel;
         } payLoadAck;
 
     }
