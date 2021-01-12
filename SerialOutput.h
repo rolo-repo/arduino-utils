@@ -16,7 +16,11 @@ Editor:	http://www.visualmicro.com
 
 #include "TimeLib.h"
 
+#ifdef ARDUINO_ARCH_ESP8266 || defined ARDUINO_wifi_kit_8 || defined ARDUINO_ESP8266_WEMOS_D1MINI 
 #define __F__ FPSTR(__PRETTY_FUNCTION__)
+#else
+#define __F__ __PRETTY_FUNCTION__
+#endif
 
 #ifdef ENABLE_LOGGER
 #define LOG_MSG_BEGIN(BIT_RATE)  Serial.begin(BIT_RATE)

@@ -48,7 +48,7 @@ namespace arduino {
       };
 
 	  template<typename ...Args>
-	  constexpr std::size_t va_count(Args&&...) { return sizeof...(Args); }
+	  constexpr size_t va_count(Args&&...) { return sizeof...(Args); }
     
 	
 	 template <typename T, uint32 N> char( &size_of_array_helper(T(&)[N]) )[N];
