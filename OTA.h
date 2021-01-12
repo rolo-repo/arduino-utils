@@ -57,6 +57,13 @@ namespace arduino {
 			});
 			ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
 				LOG_MSG("Progress:" << (progress / (total / 100)));
+
+				oTAtimer = arduino::utils::Timer("TimeOutTimer");
+				oTAtimer.addTask(TIME.getEpochTime() + 20,
+					[](long&) {
+					__updateSketch__ = false;
+					LOG_MSG("Update failed due to timeout");
+				});
 			});
 
 			ArduinoOTA.onError([](ota_error_t error) {
