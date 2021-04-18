@@ -81,7 +81,12 @@ namespace arduino {
 			{
 				for ( char i = 0; i < sizeof(Payload::m_j); i++ )
 				{
-					if (abs(i_left.m_j[i] - i_right.m_j[i]) > 10)
+					if ( abs( i_left.m_j[i] - i_right.m_j[i] ) > 1 )
+					{
+						return false;
+					}
+
+					if ( 0 != i_left.m_j[i] &&  0 == i_right.m_j[i] || 0 == i_left.m_j[i] && 0 != i_right.m_j[i])
 					{
 						return false;
 					}

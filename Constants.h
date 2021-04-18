@@ -7,6 +7,10 @@
 #include "WProgram.h"
 #endif
 
+#ifdef ARDUINO_ARCH_ESP32
+#include "analogWrite.h"
+#endif // ARDUINO_ARCH_ESP32
+
 #define LED_ON LOW
 #define LED_OFF ~LOW
 
